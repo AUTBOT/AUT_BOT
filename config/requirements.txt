@@ -4,3 +4,4 @@ tensorflow==2.4.0
 Keras==2.4.3
 selenium
 dropbox==11.19.0
+scikit-learn
