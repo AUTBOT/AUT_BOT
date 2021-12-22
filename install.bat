@@ -10,7 +10,14 @@ py -0| FINDSTR /I "3.8 3.9 3.10">Nul
 if %ERRORLEVEL% neq 0 call :PythonNotFound
 
 TITLE Installing necessary libraries...
-py -m venv bot_env
+
+if exist bot_env\ (
+    rem python environment exists
+) else (
+    rem python environment doesn't exist
+    py -m venv bot_env
+)
+
 call bot_env\Scripts\activate.bat
 py -m pip install --upgrade pip
 
