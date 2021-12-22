@@ -13,6 +13,9 @@ py -0| FINDSTR /I "3.8 3.9 3.10">Nul
 if %ERRORLEVEL% neq 0 call :PythonNotFound
 
 TITLE Installing necessary libraries...
+py -m venv bot_env
+call bot_env\Scripts\activate.bat
+
 setlocal enabledelayedexpansion
 FOR /F %%k in (config\requirements.txt) DO (
     py -m pip install %%k
