@@ -12,11 +12,11 @@ if %ERRORLEVEL% neq 0 call :PythonNotFound
 TITLE Installing necessary libraries...
 py -m venv bot_env
 call bot_env\Scripts\activate.bat
+py -m pip install --upgrade pip
 
 setlocal enabledelayedexpansion
 FOR /F %%k in (config\requirements.txt) DO (
     py -m pip install %%k
-    echo errorlevel is !ERRORLEVEL!
     if !ERRORLEVEL! neq 0 (
 
         for /f "tokens=1,2 delims==" %%a in ("%%k") do (
