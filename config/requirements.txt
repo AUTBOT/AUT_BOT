@@ -1,0 +1,6 @@
+numpy==1.19.3
+opencv-python==4.5.3.56
+tensorflow==2.4.0
+Keras==2.4.3
+selenium
+dropbox==11.19.0
