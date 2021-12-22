@@ -9,7 +9,7 @@ mkdir cache
 TITLE Check for python 3.8
 ECHO.%PATH%| FINDSTR /I "anaconda python miniconda">Nul
 if %ERRORLEVEL% neq 0 call :PythonNotFound
-py -0| FINDSTR /I "3.8 3.9">Nul
+py -0| FINDSTR /I "3.8 3.9 3.10">Nul
 if %ERRORLEVEL% neq 0 call :PythonNotFound
 
 TITLE Installing necessary libraries...
