@@ -1,9 +1,6 @@
 @echo off 
 call;
 
-netsh interface ipv4 set dns "Wi-Fi" static 178.22.122.100
-netsh interface ipv4 add dns "Wi-Fi" 185.51.200.2 index=2
-
 mkdir cache
 
 TITLE Check for python 3.8
@@ -32,17 +29,18 @@ FOR /F %%k in (config\requirements.txt) DO (
 TITLE Downloading model weights...
 py -c "import model_sync;model_sync.sync_model()"
 
-TITLE Checking Google Chrome version
-reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version >nul
-if %ERRORLEVEL% neq 0 goto GoogleChromeNotFound
+TITLE Checking Microsoft Edge version
+reg query "HKCU\Software\Microsoft\Edge\BLBeacon" /v version >nul
+if %ERRORLEVEL% neq 0 goto MicrosoftEdgeNotFound
 
-FOR /F "tokens=2* skip=2" %%a in ('reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v "version"') do set chrome_version=%%b
+FOR /F "tokens=2* skip=2" %%a in ('reg query "HKCU\Software\Microsoft\Edge\BLBeacon" /v "version"') do set edge_version=%%b
 
-echo chrome version is %chrome_version%
+echo edge version is %edge_version%
 
-TITLE Downloading Google Chrome webdriver...
-mkdir chrome_driver
-curl https://chromedriver.storage.googleapis.com/%chrome_version%/chromedriver_win32.zip --output ./chrome_driver/chromedriver.exe
+TITLE Downloading Microsoft Edge webdriver...
+mkdir edge_driver
+curl https://msedgedriver.azureedge.net/%edge_version%/edgedriver_win64.zip --output ./cache/edge_driver.zip
+powershell Expand-Archive cache\edge_driver.zip -DestinationPath edge_driver
 
 TITLE Creating Desktop shortcut...
 set batchPath=%~dp0
@@ -59,8 +57,8 @@ del CreateShortcut.vbs
 rmdir /s/q "cache"
 exit /b 0
 
-:GoogleChromeNotFound
-echo [91mNo Google Chrome found, Install Chrome to use the Bot.[0m
+:MicrosoftEdgeNotFound
+echo [91mMicrosoft Edge not found, Install Edge to use this Bot.[0m
 exit /b 1
 
 :PythonNotFound
