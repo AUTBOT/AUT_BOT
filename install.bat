@@ -15,19 +15,19 @@ if %ERRORLEVEL% neq 0 call :PythonNotFound
 TITLE Installing necessary libraries...
 setlocal enabledelayedexpansion
 FOR /F %%k in (config\requirements.txt) DO (
-    python -m pip install %%k
+    py -m pip install %%k
     echo errorlevel is !ERRORLEVEL!
     if !ERRORLEVEL! neq 0 (
 
         for /f "tokens=1,2 delims==" %%a in ("%%k") do (
         set BEFORE_UNDERSCORE=%%a
-        python -m pip install %%a
+        py -m pip install %%a
         )
     )
 )
 
 TITLE Downloading model weights...
-python -c "import model_sync;model_sync.sync_model()"
+py -c "import model_sync;model_sync.sync_model()"
 
 TITLE Checking Google Chrome version
 reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version >nul
@@ -62,9 +62,14 @@ exit /b 1
 
 :PythonNotFound
 TITLE Downloading python 3.8 ...
-curl https://www.python.org/ftp/python/3.8.3/python-3.8.3-amd64.exe --output ./cache/python-3.8.3-amd64.exe
-
+if exist cache\python-3.8.3-amd64.exe (
+    rem file exists
+) else (
+    rem file doesn't exist
+    curl https://www.python.org/ftp/python/3.8.3/python-3.8.3-amd64.exe --output ./cache/python-3.8.3-amd64.exe.part
+    ren cache\python-3.8.3-amd64.exe.part cache\python-3.8.3-amd64.exe
+)
 TITLE Installing python 3.8 ...
-./cache/python-3.8.3-amd64.exe /quiet
-SETX PATH=%PATH%;"%LocalAppData%\Programs\Python\Python38"
+cache\python-3.8.3-amd64.exe /passive
+SETX /M PATH %PATH%;"%LocalAppData%\Programs\Python\Python38"
 call;
